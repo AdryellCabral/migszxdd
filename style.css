@@ -164,7 +164,7 @@ z-index: 0;
 padding-left: 22px;
 padding-right: 22px;
 color: inherit;
-text-decoration: underline;
+text-decoration: none;
 }
 .socialsanimate svg {
 pointer-events: none;
