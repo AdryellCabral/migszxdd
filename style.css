@@ -180,3 +180,82 @@ fill: #d5fffc;
 width: 32px;
 height: 32px;
 }
+
+/* .new-video-btn {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* width: 256px;
+  height: 144px;
+
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+7px 7px 20px 0px rgba(0,0,0,.1),
+4px 4px 5px 0px rgba(0,0,0,.1);
+outline: none;
+
+color: #000000;
+border-radius: 5px;
+padding: 10px 25px;
+/* font-family: 'Josefin Sans'; */
+/* font-weight: 500; */
+
+/* background: transparent;
+cursor: pointer;
+transition: all 0.3s ease;
+
+span {
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none !important;
+  color: #000000;
+}
+
+img {
+
+  object-fit: cover;
+  object-position: center;
+}
+} */
+
+
+
+#imagem-container {
+  /* overflow: hidden; Opcional: remove o excesso do contêiner */
+  border: none;
+  border-radius: 5px;
+}
+
+.custom-btn2 {
+  width: 100%;
+height: 45px;
+color: #000000;
+padding: 10px 25px;
+font-family: 'Josefin Sans';
+font-weight: 500;
+background: transparent;
+cursor: pointer;
+transition: all 0.3s ease;
+position: relative;
+display: block;
+box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+7px 7px 20px 0px rgba(0,0,0,.1),
+4px 4px 5px 0px rgba(0,0,0,.1);
+outline: none;
+
+
+line-height: 42px;
+background: #c7fbff;
+background: radial-gradient(circle,rgba(199, 251, 255, 1) 13%, rgba(51, 216, 222, 1) 54%, rgba(55, 59, 59, 1) 90%, rgba(18, 17, 17, 1) 100%);
+padding: 0;
+border: none;
+}
+
+#video-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  object-position: center; /* Ou center, bottom, 0 0, etc. */
+
+
+}
