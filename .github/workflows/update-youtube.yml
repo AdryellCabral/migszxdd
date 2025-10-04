@@ -12,6 +12,10 @@ on:
 jobs:
   update_latest_video:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # Permite que o Action faça commit e push de volta ao repositório
+
     steps:
       # 1. Checkout: Baixa o código do seu repositório
       - name: Checkout repository
