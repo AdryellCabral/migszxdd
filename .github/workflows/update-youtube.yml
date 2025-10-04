@@ -75,5 +75,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Automático: Atualizar dados do último vídeo do YouTube"
-          files: latest_video.json
+          file_pattern: latest_video.json
           # O arquivo 'latest_video.json' será comitado e, assim, atualizado na sua página estática
