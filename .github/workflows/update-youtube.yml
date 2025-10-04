@@ -1,0 +1,79 @@
+name: Atualizar Último Vídeo do YouTube
+
+# Define o agendamento para rodar duas vezes ao dia.
+# O padrão é UTC. '0 10,22 * * *' significa 10:00 e 22:00 UTC.
+# Você pode ajustar os horários conforme seu fuso (e.g., -3h para Brasília).
+on:
+  schedule:
+    - cron: '0 10,22 * * *'
+  # Permite execução manual pela aba 'Actions'
+  workflow_dispatch:
+
+jobs:
+  update_latest_video:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout: Baixa o código do seu repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # 2. Instalação: Instala o utilitário 'jq' para processar JSON via linha de comando
+      - name: Install jq
+        run: sudo apt-get install jq -y
+        
+      # 3. Busca e Salva o Vídeo
+      - name: Fetch and Save Latest Video Information
+        run: |
+          # **ATENÇÃO:** Substitua [SEU_ID_DO_CANAL] pelo ID único do seu canal (Ex: UC...)
+          CHANNEL_ID="UCoHbXUedBgzBn3lKHLNUGcg" 
+          
+          # Acessa a Chave de API que você salvou nos Segredos do GitHub
+          API_KEY="${{ secrets.YOUTUBE_API_KEY }}"
+          OUTPUT_FILE="latest_video.json"
+
+          echo "Buscando o vídeo mais recente do canal: $CHANNEL_ID"
+
+          # Faz a chamada à API do YouTube:
+          # - Busca ('search')
+          # - Pelo snippet (título, descrição, thumbnails)
+          # - No canal específico ($CHANNEL_ID)
+          # - Ordena por data ('order=date') e pega apenas 1 resultado ('maxResults=1')
+          VIDEO_DATA=$(curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=$CHANNEL_ID&maxResults=1&order=date&type=video&key=$API_KEY")
+
+          # Verifica se a busca retornou resultados válidos (erro ou sem vídeo)
+          if echo "$VIDEO_DATA" | jq -e '.items | length > 0' > /dev/null; then
+
+            # Extrai os dados necessários usando o 'jq'
+            VIDEO_ID=$(echo "$VIDEO_DATA" | jq -r '.items[0].id.videoId')
+            TITLE=$(echo "$VIDEO_DATA" | jq -r '.items[0].snippet.title')
+            
+            # Pega a URL da thumbnail de alta qualidade
+            THUMBNAIL_URL=$(echo "$VIDEO_DATA" | jq -r '.items[0].snippet.thumbnails.high.url')
+            
+            # Cria a URL completa do vídeo
+            VIDEO_URL="https://www.youtube.com/watch?v=$VIDEO_ID"
+
+            # Formata os dados no arquivo JSON (latest_video.json)
+            # O escape de caracteres é feito para garantir que o JSON seja válido
+            jq -n \
+              --arg title "$TITLE" \
+              --arg thumbnail "$THUMBNAIL_URL" \
+              --arg url "$VIDEO_URL" \
+              '{title: $title, thumbnail: $thumbnail, url: $url}' > "$OUTPUT_FILE"
+
+            echo "Informações salvas com sucesso em $OUTPUT_FILE."
+            
+          else
+            echo "Erro ou nenhum vídeo encontrado. Pulando a atualização do arquivo."
+            # Se não houver vídeo novo, não prosseguimos para o commit
+            exit 0
+          fi
+
+
+      # 4. Commit: Salva o novo JSON no repositório
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automático: Atualizar dados do último vídeo do YouTube"
+          files: latest_video.json
+          # O arquivo 'latest_video.json' será comitado e, assim, atualizado na sua página estática
