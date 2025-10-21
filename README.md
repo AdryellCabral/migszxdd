@@ -1,2 +1,2 @@
 # migszxdd
-Linktree clone
+Linktree inspirated.
